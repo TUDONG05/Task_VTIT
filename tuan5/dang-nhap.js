@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (emailValue === DEMO_ACCOUNT.email && passwordValue === DEMO_ACCOUNT.password) {
             failedAttempts = 0;
-            window.location.href = 'doi-mat-khau.html';
+            window.location.href = 'danh-sach-nguoi-dung.html';
             return;
         }
 
