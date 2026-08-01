@@ -1,0 +1,164 @@
+.form-login {
+  width: 90%;
+  max-width: 560px;
+  height: auto;
+  padding: 30px 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: 'Quicksand', sans-serif;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.form-login img {
+  margin-top: 45px;
+  width: 350px;
+}
+
+.form-login h2 {
+  color: #ee0033;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+.form-login input,
+.form-login select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px 15px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #333;
+  background: white;
+}
+
+.form-login input:focus,
+.form-login select:focus {
+  border-color: #ee0033;
+  outline: none;
+}
+
+.form-login input::placeholder {
+  color: #999;
+}
+
+.hoten,
+.cty-qg {
+  display: flex;
+  gap: 15px;
+  margin: 8px 0;
+}
+
+.hoten input,
+.cty-qg input,
+.cty-qg select {
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+}
+
+.btn-register {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ee0033;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-register:hover {
+  background-color: #d9002f;
+}
+
+.btn-register:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-continue {
+  width: 100%;
+  padding: 14px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: #d0d2d5;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.to-login {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.to-login a {
+  color: blue;
+  text-decoration: none;
+}
+
+.to-login a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  display: block;
+  min-height: 16px;
+  margin: 0 0 8px 4px;
+  color: #ee0033;
+  font-size: 13px;
+}
+
+#title-of-form {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin-top: -30px;
+  background: #ee0033;
+  padding: 0 20px;
+  box-sizing: border-box;
+  border-radius: 15px 15px 0px 0px;
+}
+
+#title-of-form a {
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+#title-of-form h3 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: #fff;
+}
+
+.form-login p {
+  width: 80%;
+  margin-top: 0;
+}
