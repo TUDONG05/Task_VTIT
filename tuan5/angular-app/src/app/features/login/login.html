@@ -46,7 +46,7 @@
       </div>
 
       <span class="error-message">{{ formError() }}</span>
-      <button type="submit" class="btn-register" [disabled]="isLockedOut()">Đăng nhập</button>
+      <button type="submit" class="btn-register" [disabled]="isLockedOut() || isSubmitting()">Đăng nhập</button>
     </div>
 
     <div class="to-login">

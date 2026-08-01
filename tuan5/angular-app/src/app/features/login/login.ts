@@ -23,6 +23,7 @@ export class Login {
   protected readonly formError = signal('');
   protected readonly isPasswordVisible = signal(false);
   protected readonly isLockedOut = signal(false);
+  protected readonly isSubmitting = signal(false);
 
   togglePasswordVisibility(): void {
     this.isPasswordVisible.update((v) => !v);
@@ -37,16 +38,19 @@ export class Login {
     }
 
     const { email, password } = this.form.getRawValue();
-    const result = this.auth.login(email.trim(), password);
+    this.isSubmitting.set(true);
+    this.auth.login(email.trim(), password).subscribe((result) => {
+      this.isSubmitting.set(false);
 
-    if (result.success) {
-      this.router.navigate(['/users']);
-      return;
-    }
+      if (result.success) {
+        this.router.navigate(['/users']);
+        return;
+      }
 
-    this.formError.set(result.message ?? '');
-    if (result.locked) {
-      this.isLockedOut.set(true);
-    }
+      this.formError.set(result.message ?? '');
+      if (result.locked) {
+        this.isLockedOut.set(true);
+      }
+    });
   }
 }

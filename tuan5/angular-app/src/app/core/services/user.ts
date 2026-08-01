@@ -2,30 +2,36 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, tap } from 'rxjs';
 import { User, UserFormValue } from '../models/user';
+import { environment } from '../../../environments/environment';
 
-const API_URL = 'https://dummyjson.com/users';
+const API_URL = `${environment.reqresApiUrl}/users`;
 
-interface DummyJsonUser {
+interface ReqresUser {
   id: number;
   email: string;
-  firstName: string;
-  lastName: string;
-  image: string;
+  first_name: string;
+  last_name: string;
+  avatar: string;
 }
 
-interface DummyJsonUsersResponse {
-  users: DummyJsonUser[];
+interface ReqresUsersResponse {
+  page: number;
+  per_page: number;
   total: number;
-  skip: number;
-  limit: number;
+  total_pages: number;
+  data: ReqresUser[];
 }
 
-function toUser(raw: DummyJsonUser): User {
-  return { id: raw.id, email: raw.email, firstName: raw.firstName, lastName: raw.lastName, avatar: raw.image };
+function toUser(raw: ReqresUser): User {
+  return { id: raw.id, email: raw.email, firstName: raw.first_name, lastName: raw.last_name, avatar: raw.avatar };
+}
+
+function toReqresBody(value: UserFormValue) {
+  return { email: value.email, first_name: value.firstName, last_name: value.lastName, avatar: value.avatar };
 }
 
 /**
- * dummyjson's write endpoints are mocked (nothing persists server-side), so writes are
+ * reqres.in's write endpoints don't persist into subsequent GET /users pages, so writes are
  * tracked here and replayed on top of whatever the next GET returns: new users (negative
  * ids) are pinned to the top of page 0, edits/deletes to server-backed ids are re-applied
  * to each freshly fetched page.
@@ -45,10 +51,11 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   fetchPage(skip: number, limit: number): Observable<User[]> {
-    return this.http.get<DummyJsonUsersResponse>(`${API_URL}?skip=${skip}&limit=${limit}`).pipe(
+    const page = Math.floor(skip / limit) + 1;
+    return this.http.get<ReqresUsersResponse>(`${API_URL}?page=${page}&per_page=${limit}`).pipe(
       tap((res) => this.totalCount.set(res.total)),
       map((res) =>
-        res.users
+        res.data
           .map(toUser)
           .filter((u) => !this.localDeletes.has(u.id))
           .map((u) => this.localUpdates.get(u.id) ?? u)
@@ -68,25 +75,18 @@ export class UserService {
     if (cached || id < 0) {
       return of(cached);
     }
-    return this.http.get<DummyJsonUser>(`${API_URL}/${id}`).pipe(map(toUser));
+    return this.http.get<{ data: ReqresUser }>(`${API_URL}/${id}`).pipe(map((res) => toUser(res.data)));
   }
 
   create(value: UserFormValue): Observable<User> {
-    return this.http
-      .post<DummyJsonUser>(`${API_URL}/add`, {
-        firstName: value.firstName,
-        lastName: value.lastName,
-        email: value.email,
-        image: value.avatar
+    return this.http.post<ReqresUser>(API_URL, toReqresBody(value)).pipe(
+      // reqres's mock create doesn't persist into GET /users, so mint a local id to display it.
+      map(() => ({ ...value, id: this.nextLocalId-- })),
+      tap((user) => {
+        this.localCreated.update((list) => [user, ...list]);
+        this.users.update((list) => [user, ...list]);
       })
-      .pipe(
-        // dummyjson's mock /add always echoes the same id, so mint a local one to avoid collisions.
-        map((raw) => ({ ...toUser(raw), id: this.nextLocalId--, avatar: value.avatar || raw.image })),
-        tap((user) => {
-          this.localCreated.update((list) => [user, ...list]);
-          this.users.update((list) => [user, ...list]);
-        })
-      );
+    );
   }
 
   update(id: number, value: UserFormValue): Observable<User> {
@@ -97,20 +97,13 @@ export class UserService {
       return of(updated);
     }
 
-    return this.http
-      .put<DummyJsonUser>(`${API_URL}/${id}`, {
-        firstName: value.firstName,
-        lastName: value.lastName,
-        email: value.email,
-        image: value.avatar
+    return this.http.put<ReqresUser>(`${API_URL}/${id}`, toReqresBody(value)).pipe(
+      map(() => ({ ...value, id })),
+      tap((user) => {
+        this.localUpdates.set(id, user);
+        this.users.update((list) => list.map((u) => (u.id === id ? user : u)));
       })
-      .pipe(
-        map((raw) => ({ ...toUser(raw), id, avatar: value.avatar || raw.image })),
-        tap((user) => {
-          this.localUpdates.set(id, user);
-          this.users.update((list) => list.map((u) => (u.id === id ? user : u)));
-        })
-      );
+    );
   }
 
   delete(id: number): Observable<void> {
