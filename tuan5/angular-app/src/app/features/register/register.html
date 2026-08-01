@@ -1,0 +1,44 @@
+<app-auth-layout>
+  <form class="form-login">
+    <img src="assets/imgs/vss-logo.png" alt="" />
+    <h2>Đăng ký trải nghiệm</h2>
+
+    <div class="form">
+      <div class="hoten">
+        <input type="text" placeholder="Nhập họ của bạn" />
+        <input type="text" placeholder="Nhập tên của bạn" />
+      </div>
+
+      <input type="text" placeholder="Nhập email làm việc" />
+
+      <div class="cty-qg">
+        <input type="text" placeholder="Nhập tên công ty" />
+        <select class="quoc-gia">
+          <option value="" disabled selected hidden>Quốc gia</option>
+          <option value="vn">Việt Nam</option>
+          <option value="us">Hoa Kỳ</option>
+          <option value="jp">Nhật Bản</option>
+          <option value="kr">Hàn Quốc</option>
+          <option value="sg">Singapore</option>
+        </select>
+      </div>
+      <select class="linh-vuc">
+        <option value="" disabled selected hidden>Lĩnh vực</option>
+        <option value="cntt">Công nghệ thông tin</option>
+        <option value="banle">Bán lẻ</option>
+        <option value="giaoduc">Giáo dục</option>
+        <option value="yte">Y tế</option>
+        <option value="taichinh">Tài chính - Ngân hàng</option>
+        <option value="khac">Khác</option>
+      </select>
+      <input type="text" placeholder="Vị trí việc làm" />
+      <input type="text" placeholder="Mục đích đến với website" />
+      <button class="btn-register" type="submit">Đăng ký</button>
+    </div>
+
+    <div class="to-login">
+      <p>Bạn đã có tài khoản?</p>
+      <a routerLink="/dang-nhap" id="link-login">Đăng nhập</a>
+    </div>
+  </form>
+</app-auth-layout>

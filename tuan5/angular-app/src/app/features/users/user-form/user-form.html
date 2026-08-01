@@ -1,0 +1,62 @@
+<div class="page">
+  <a routerLink="/users" class="back-link">‹ Quay lại danh sách</a>
+
+  <div class="form-card">
+    <h1>{{ isEditMode() ? 'Sửa người dùng' : 'Thêm người dùng' }}</h1>
+
+    @if (isLoading()) {
+      <p>Đang tải...</p>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <label>
+          Họ (First name)
+          <input type="text" formControlName="firstName" placeholder="Nhập họ" />
+          @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+            <span class="error-message">Vui lòng nhập họ.</span>
+          }
+        </label>
+
+        <label>
+          Tên (Last name)
+          <input type="text" formControlName="lastName" placeholder="Nhập tên" />
+          @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+            <span class="error-message">Vui lòng nhập tên.</span>
+          }
+        </label>
+
+        <label>
+          Email
+          <input type="text" formControlName="email" placeholder="Nhập email" />
+          @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+            <span class="error-message">Vui lòng nhập email.</span>
+          } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
+            <span class="error-message">Email không đúng định dạng.</span>
+          }
+        </label>
+
+        <label>
+          Avatar (URL ảnh)
+          <input type="text" formControlName="avatar" placeholder="https://..." />
+          @if (form.controls.avatar.touched && form.controls.avatar.invalid) {
+            <span class="error-message">Vui lòng nhập URL avatar.</span>
+          }
+        </label>
+
+        @if (form.controls.avatar.value) {
+          <img class="avatar-preview" [src]="form.controls.avatar.value" alt="avatar preview" />
+        }
+
+        @if (errorMessage()) {
+          <p class="error-message form-error">{{ errorMessage() }}</p>
+        }
+
+        <div class="actions">
+          <button type="submit" class="btn-primary" [disabled]="isSaving()">
+            {{ isSaving() ? 'Đang lưu...' : 'Lưu' }}
+          </button>
+          <a routerLink="/users" class="btn-ghost">Hủy</a>
+        </div>
+      </form>
+    }
+  </div>
+</div>
