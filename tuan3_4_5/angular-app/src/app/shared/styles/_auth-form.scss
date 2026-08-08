@@ -20,6 +20,23 @@
 .form-login img {
   margin-top: 45px;
   width: 350px;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  .form-login {
+    width: 100%;
+    padding: 24px 0;
+  }
+
+  .form-login img {
+    margin-top: 24px;
+  }
+
+  .form {
+    width: 90%;
+  }
 }
 
 .form-login h2 {
@@ -70,6 +87,14 @@
   flex: 1;
   margin: 0;
   min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .hoten,
+  .cty-qg {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 .btn-register {

@@ -5,6 +5,20 @@
   font-family: 'Quicksand', Arial, Helvetica, sans-serif;
 }
 
+@media (max-width: 480px) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
+
 .back-link {
   display: inline-block;
   margin-bottom: 16px;

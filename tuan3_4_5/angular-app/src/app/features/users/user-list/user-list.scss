@@ -5,6 +5,22 @@
   font-family: 'Quicksand', Arial, Helvetica, sans-serif;
 }
 
+@media (max-width: 640px) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions .btn-primary,
+  .header-actions .btn-ghost {
+    flex: 1;
+    text-align: center;
+  }
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;

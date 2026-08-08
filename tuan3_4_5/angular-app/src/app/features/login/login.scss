@@ -1,7 +1,8 @@
 @use '../../shared/styles/auth-form';
 
 .form-login {
-  width: 460px;
+  width: 100%;
+  max-width: 460px;
   height: auto;
   padding: 35px 0 30px;
 }
@@ -9,6 +10,7 @@
 .form-login img {
   margin-top: 0;
   width: 220px;
+  max-width: 60%;
 }
 
 .form-login h2 {
@@ -61,10 +63,17 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
+  display: flex;
+  align-items: center;
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 18px;
   padding: 0;
   line-height: 1;
+  color: #6b7280;
+  transition: color 0.15s ease;
+}
+
+.toggle-password:hover {
+  color: #374151;
 }
