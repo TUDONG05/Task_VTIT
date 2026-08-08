@@ -1,30 +1,8 @@
 # Tuần 5 — Đăng nhập & Quản lý User
 
-Thư mục này gồm 2 phần độc lập:
+Angular app port lại các trang đăng nhập/đăng ký/quên-đổi mật khẩu + CRUD user, gọi API thật [reqres.in](https://reqres.in).
 
-1. **Trang tĩnh** (`*.html`, `*.css`, `dang-nhap.js`) — HTML/CSS/JS thuần, validate form phía client.
-2. **`angular-app/`** — Angular app port lại các trang trên + thêm CRUD user, gọi API thật [reqres.in](https://reqres.in).
-
-Ảnh dùng chung, nằm ở `../imgs/` (thư mục gốc `Task1/imgs/`), không copy riêng cho từng tuần.
-
-## 1. Trang tĩnh
-
-Mở trực tiếp `dang-nhap.html` bằng trình duyệt (hoặc chạy qua Live Server để tránh lỗi CORS/relative path).
-
-Các trang: `dang-nhap.html`, `dang-ky.html`, `quen-mat-khau.html`, `doi-mat-khau.html`, `danh-sach-nguoi-dung.html`.
-
-**Tài khoản demo** (hardcode trong `dang-nhap.js`, không gọi API):
-
-```
-Email:      admin@gmail.com
-Mật khẩu:   Admin@123
-```
-
-Đăng nhập sai quá 5 lần sẽ khoá nút đăng nhập. Đăng nhập thành công sẽ chuyển sang
-`danh-sach-nguoi-dung.html` — trang danh sách user (cột avatar/email/first name/last
-name) với thêm/sửa/xoá, hiện chỉ lưu tạm trong bộ nhớ trình duyệt (chưa gọi API).
-
-## 2. Angular app
+## Chạy app
 
 ```bash
 cd angular-app
