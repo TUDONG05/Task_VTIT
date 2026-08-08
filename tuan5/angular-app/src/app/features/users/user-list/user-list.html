@@ -1,0 +1,67 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <h1>Danh sách người dùng</h1>
+      <p class="subtitle">Quản lý thông tin người dùng trong hệ thống</p>
+    </div>
+    <div class="header-actions">
+      <a routerLink="/users/add" class="btn-primary">+ Thêm người dùng</a>
+      <button type="button" class="btn-ghost" (click)="logout()">Đăng xuất</button>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="banner-error">{{ errorMessage() }}</p>
+  }
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Avatar</th>
+          <th>Email</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th class="actions-col">Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (isLoading()) {
+          <tr>
+            <td colspan="5" class="empty-state">Đang tải...</td>
+          </tr>
+        } @else if (users().length === 0) {
+          <tr>
+            <td colspan="5" class="empty-state">Chưa có người dùng nào.</td>
+          </tr>
+        } @else {
+          @for (user of users(); track user.id) {
+            <tr>
+              <td><img class="avatar" [src]="user.avatar" [alt]="user.firstName" /></td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.lastName }}</td>
+              <td class="actions-col">
+                <a [routerLink]="['/users/edit', user.id]" class="btn-action btn-action-edit">Sửa</a>
+                <button
+                  type="button"
+                  class="btn-action btn-action-delete"
+                  [disabled]="deletingId() === user.id"
+                  (click)="removeUser(user.id)"
+                >
+                  Xóa
+                </button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button type="button" (click)="goToPage(-1)" [disabled]="page() === 0">‹ Trước</button>
+    <span>Trang {{ page() + 1 }} / {{ totalPages() }}</span>
+    <button type="button" (click)="goToPage(1)" [disabled]="page() + 1 >= totalPages()">Sau ›</button>
+  </div>
+</div>
