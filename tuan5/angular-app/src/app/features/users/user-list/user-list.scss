@@ -107,16 +107,39 @@ th {
   white-space: nowrap;
 }
 
-.btn-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
+.btn-action {
+  display: inline-block;
+  border-radius: 6px;
+  padding: 6px 12px;
   margin-right: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
   text-decoration: none;
+  border: 1px solid transparent;
 }
 
-.btn-icon:disabled {
+.btn-action-edit {
+  background: #eef4ff;
+  color: #2563eb;
+  border-color: #cbdcff;
+}
+
+.btn-action-edit:hover {
+  background: #dce9ff;
+}
+
+.btn-action-delete {
+  background: #fdecec;
+  color: #ee0033;
+  border-color: #f3b9c1;
+}
+
+.btn-action-delete:hover {
+  background: #fbdada;
+}
+
+.btn-action-delete:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }

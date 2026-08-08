@@ -42,15 +42,14 @@
               <td>{{ user.firstName }}</td>
               <td>{{ user.lastName }}</td>
               <td class="actions-col">
-                <a [routerLink]="['/users/edit', user.id]" class="btn-icon" title="Sửa">✏️</a>
+                <a [routerLink]="['/users/edit', user.id]" class="btn-action btn-action-edit">Sửa</a>
                 <button
                   type="button"
-                  class="btn-icon"
-                  title="Xóa"
+                  class="btn-action btn-action-delete"
                   [disabled]="deletingId() === user.id"
                   (click)="removeUser(user.id)"
                 >
-                  🗑️
+                  Xóa
                 </button>
               </td>
             </tr>
