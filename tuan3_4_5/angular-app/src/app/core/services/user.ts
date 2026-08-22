@@ -22,8 +22,15 @@ interface ReqresUsersResponse {
   data: ReqresUser[];
 }
 
+/** reqres.in serves avatars with Cross-Origin-Resource-Policy: same-origin, which blocks direct
+ * cross-origin loading in the browser; route them through the dev-server proxy (proxy.conf.json)
+ * so the browser fetches from our own origin instead. */
+function toProxiedAvatarUrl(url: string): string {
+  return url.replace('https://reqres.in/img/faces', '/avatars');
+}
+
 function toUser(raw: ReqresUser): User {
-  return { id: raw.id, email: raw.email, firstName: raw.first_name, lastName: raw.last_name, avatar: raw.avatar };
+  return { id: raw.id, email: raw.email, firstName: raw.first_name, lastName: raw.last_name, avatar: toProxiedAvatarUrl(raw.avatar) };
 }
 
 function toReqresBody(value: UserFormValue) {
@@ -69,7 +76,7 @@ export class UserService {
     return this.users().find((u) => u.id === id);
   }
 
-  /** Locally-created users (negative ids) only ever exist in the signal store. */
+  /** tim user localstorage truoc -> api  */
   fetchOne(id: number): Observable<User | undefined> {
     const cached = this.getById(id);
     if (cached || id < 0) {
@@ -90,13 +97,15 @@ export class UserService {
   }
 
   update(id: number, value: UserFormValue): Observable<User> {
+
+    // user local 
     if (id < 0) {
       const updated: User = { id, email: value.email, firstName: value.firstName, lastName: value.lastName, avatar: value.avatar };
       this.localCreated.update((list) => list.map((u) => (u.id === id ? updated : u)));
       this.users.update((list) => list.map((u) => (u.id === id ? updated : u)));
       return of(updated);
     }
-
+    //user tu serve 
     return this.http.put<ReqresUser>(`${API_URL}/${id}`, toReqresBody(value)).pipe(
       map(() => ({ ...value, id })),
       tap((user) => {

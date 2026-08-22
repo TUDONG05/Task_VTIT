@@ -1,0 +1,10 @@
+{
+  "/avatars/*": {
+    "target": "https://reqres.in",
+    "changeOrigin": true,
+    "secure": true,
+    "pathRewrite": {
+      "^/avatars": "/img/faces"
+    }
+  }
+}
