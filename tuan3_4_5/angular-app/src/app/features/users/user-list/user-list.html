@@ -14,10 +14,20 @@
     <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
   }
 
+  <div class="search-bar">
+    <input
+      nz-input
+      type="search"
+      [formControl]="searchControl"
+      placeholder="Tìm theo tên người dùng..."
+      aria-label="Tìm theo tên người dùng"
+    />
+  </div>
+
   <nz-card class="table-card" [nzBodyStyle]="{ padding: '0' }">
     <nz-table
       #userTable
-      [nzData]="users()"
+      [nzData]="filteredUsers()"
       [nzLoading]="isLoading()"
       [nzFrontPagination]="false"
       [nzShowPagination]="false"

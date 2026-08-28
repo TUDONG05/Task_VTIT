@@ -50,6 +50,17 @@ nz-alert {
   margin-bottom: 16px;
 }
 
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+}
+
 .table-card {
   background: white;
   border: 1px solid #eee;
