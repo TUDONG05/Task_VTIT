@@ -1,10 +1,14 @@
 <app-auth-layout>
-  <form class="form-login" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <form nz-form class="form-login" [formGroup]="form" (ngSubmit)="submit()" novalidate>
     <img src="assets/imgs/vss-logo.png" alt="" />
     <h2>Đăng nhập vào tài khoản của bạn</h2>
 
     <div class="form">
-      <input type="text" formControlName="email" placeholder="Nhập tài khoản" />
+      <nz-form-item>
+        <nz-form-control>
+          <input nz-input type="email" formControlName="email" placeholder="Nhập tài khoản" />
+        </nz-form-control>
+      </nz-form-item>
       <span class="error-message">
         @if (form.controls.email.touched && form.controls.email.hasError('required')) {
           Vui lòng nhập email.
@@ -13,50 +17,88 @@
         }
       </span>
 
-      <div class="password-wrapper">
-        <input
-          [type]="isPasswordVisible() ? 'text' : 'password'"
-          formControlName="password"
-          placeholder="Nhập mật khẩu"
-        />
-        <button
-          type="button"
-          class="toggle-password"
-          (click)="togglePasswordVisibility()"
-          [attr.aria-label]="isPasswordVisible() ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
-        >
-          @if (isPasswordVisible()) {
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.62 21.62 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24" />
-              <line x1="1" y1="1" x2="23" y2="23" />
-            </svg>
-          } @else {
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          }
+      <nz-form-item>
+        <nz-form-control class="password-wrapper">
+          <input
+            nz-input
+            [type]="isPasswordVisible() ? 'text' : 'password'"
+            formControlName="password"
+            placeholder="Nhập mật khẩu"
+          />
+          <button
+            nz-button
+            nzType="text"
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="isPasswordVisible() ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'"
+          >
+            @if (isPasswordVisible()) {
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.62 21.62 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.6 21.6 0 0 1-3.22 4.44M14.12 14.12a3 3 0 1 1-4.24-4.24"
+                />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            } @else {
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            }
           </button>
-      </div>
+        </nz-form-control>
+      </nz-form-item>
       <span class="error-message">
         @if (form.controls.password.touched && form.controls.password.hasError('required')) {
           Vui lòng nhập mật khẩu.
-        } @else if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+        } @else if (
+          form.controls.password.touched && form.controls.password.hasError('minlength')
+        ) {
           Mật khẩu phải có ít nhất 6 ký tự.
         }
       </span>
 
       <div class="act-pw">
         <div class="save-pw">
-          <input type="checkbox" id="save-password" />
-          <label for="save-password">Lưu mật khẩu </label>
+          <label nz-checkbox>Lưu mật khẩu</label>
         </div>
 
         <a routerLink="/quen-mat-khau" id="forget-pw">Quên mật khẩu </a>
       </div>
 
-      <span class="error-message">{{ formError() }}</span>
-      <button type="submit" class="btn-register" [disabled]="isLockedOut() || isSubmitting()">Đăng nhập</button>
+      @if (formError()) {
+        <nz-alert nzType="error" [nzMessage]="formError()" nzShowIcon></nz-alert>
+      }
+      <button
+        nz-button
+        nzType="primary"
+        nzBlock
+        type="submit"
+        class="submit-button"
+        [nzLoading]="isSubmitting()"
+        [disabled]="isLockedOut()"
+      >
+        Đăng nhập
+      </button>
     </div>
 
     <div class="to-login">

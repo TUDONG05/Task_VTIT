@@ -1,11 +1,28 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { UserService } from '../../../core/services/user';
 import { finalize } from 'rxjs';
 @Component({
   selector: 'app-user-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    NzAlertModule,
+    NzAvatarModule,
+    NzButtonModule,
+    NzCardModule,
+    NzFormModule,
+    NzInputModule,
+    NzSpinModule,
+  ],
   templateUrl: './user-form.html',
   styleUrl: './user-form.scss',
 })

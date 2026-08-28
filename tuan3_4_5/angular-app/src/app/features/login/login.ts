@@ -1,12 +1,26 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { AuthLayout } from '../../shared/auth-layout/auth-layout';
 import { AuthService } from '../../core/services/auth';
 import { finalize } from 'rxjs';
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, AuthLayout],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    AuthLayout,
+    NzAlertModule,
+    NzButtonModule,
+    NzCheckboxModule,
+    NzFormModule,
+    NzInputModule,
+  ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
