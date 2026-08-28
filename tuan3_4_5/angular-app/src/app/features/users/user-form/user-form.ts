@@ -2,12 +2,12 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../core/services/user';
-
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-user-form',
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './user-form.html',
-  styleUrl: './user-form.scss'
+  styleUrl: './user-form.scss',
 })
 export class UserForm implements OnInit {
   private readonly fb = inject(FormBuilder);
@@ -19,7 +19,7 @@ export class UserForm implements OnInit {
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    avatar: ['', [Validators.required]]
+    avatar: ['', [Validators.required]],
   });
 
   protected readonly userId = signal<number | null>(null);
@@ -37,25 +37,26 @@ export class UserForm implements OnInit {
     this.isEditMode.set(true);
     this.isLoading.set(true);
 
-    this.userService.fetchOne(id).subscribe({
-      next: (user) => {
-        this.isLoading.set(false);
-        if (!user) {
-          this.errorMessage.set('Không tìm thấy người dùng.');
-          return;
-        }
-        this.form.setValue({
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          avatar: user.avatar
-        });
-      },
-      error: () => {
-        this.isLoading.set(false);
-        this.errorMessage.set('Không tải được thông tin người dùng.');
-      }
-    });
+    this.userService
+      .fetchOne(id)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (user) => {
+          if (!user) {
+            this.errorMessage.set('Không tìm thấy người dùng.');
+            return;
+          }
+          this.form.setValue({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            avatar: user.avatar,
+          });
+        },
+        error: () => {
+          this.errorMessage.set('Không tải được thông tin người dùng.');
+        },
+      });
   }
 
   submit(): void {
@@ -70,17 +71,18 @@ export class UserForm implements OnInit {
     const value = this.form.getRawValue();
     const id = this.userId();
 
-    const request = this.isEditMode() && id !== null ? this.userService.update(id, value) : this.userService.create(value);
+    const request =
+      this.isEditMode() && id !== null
+        ? this.userService.update(id, value)
+        : this.userService.create(value);
 
-    request.subscribe({
+    request.pipe(finalize(() => this.isSaving.set(false))).subscribe({
       next: () => {
-        this.isSaving.set(false);
         this.router.navigate(['/users']);
       },
       error: () => {
-        this.isSaving.set(false);
         this.errorMessage.set('Lưu người dùng thất bại. Vui lòng thử lại.');
-      }
+      },
     });
   }
 }

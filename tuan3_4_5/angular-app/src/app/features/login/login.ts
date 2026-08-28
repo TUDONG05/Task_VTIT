@@ -3,12 +3,12 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthLayout } from '../../shared/auth-layout/auth-layout';
 import { AuthService } from '../../core/services/auth';
-
+import { finalize } from 'rxjs';
 @Component({
   selector: 'app-login',
   imports: [ReactiveFormsModule, RouterLink, AuthLayout],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrl: './login.scss',
 })
 export class Login {
   private readonly fb = inject(FormBuilder);
@@ -17,7 +17,7 @@ export class Login {
 
   protected readonly form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   protected readonly formError = signal('');
@@ -38,19 +38,20 @@ export class Login {
     }
 
     const { email, password } = this.form.getRawValue();
+
     this.isSubmitting.set(true);
-    this.auth.login(email.trim(), password).subscribe((result) => {
-      this.isSubmitting.set(false);
 
-      if (result.success) {
-        this.router.navigate(['/users']);
-        return;
-      }
+    this.auth
+      .login(email.trim(), password)
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe((result) => {
+        if (result.success) {
+          this.router.navigate(['/users']);
+          return;
+        }
 
-      this.formError.set(result.message ?? '');
-      if (result.locked) {
-        this.isLockedOut.set(true);
-      }
-    });
+        this.formError.set(result.message ?? '');
+        this.isLockedOut.set(result.locked ?? false);
+      });
   }
 }
