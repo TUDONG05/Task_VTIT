@@ -1,62 +1,90 @@
 <div class="page">
-  <a routerLink="/users" class="back-link">‹ Quay lại danh sách</a>
+  <a nz-button nzType="link" routerLink="/users" class="back-link">‹ Quay lại danh sách</a>
 
-  <div class="form-card">
-    <h1>{{ isEditMode() ? 'Sửa người dùng' : 'Thêm người dùng' }}</h1>
-
+  <nz-card class="form-card" [nzTitle]="isEditMode() ? 'Sửa người dùng' : 'Thêm người dùng'">
     @if (isLoading()) {
-      <p>Đang tải...</p>
+      <div class="loading-state"><nz-spin nzTip="Đang tải..."></nz-spin></div>
     } @else {
-      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-        <label>
-          Họ (First name)
-          <input type="text" formControlName="firstName" placeholder="Nhập họ" />
-          @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
-            <span class="error-message">Vui lòng nhập họ.</span>
-          }
-        </label>
+      <form nz-form nzLayout="vertical" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="firstName">Họ (First name)</nz-form-label>
+          <nz-form-control [nzErrorTip]="firstNameError">
+            <input
+              id="firstName"
+              nz-input
+              type="text"
+              formControlName="firstName"
+              placeholder="Nhập họ"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <ng-template #firstNameError>Vui lòng nhập họ.</ng-template>
 
-        <label>
-          Tên (Last name)
-          <input type="text" formControlName="lastName" placeholder="Nhập tên" />
-          @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
-            <span class="error-message">Vui lòng nhập tên.</span>
-          }
-        </label>
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="lastName">Tên (Last name)</nz-form-label>
+          <nz-form-control [nzErrorTip]="lastNameError">
+            <input
+              id="lastName"
+              nz-input
+              type="text"
+              formControlName="lastName"
+              placeholder="Nhập tên"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <ng-template #lastNameError>Vui lòng nhập tên.</ng-template>
 
-        <label>
-          Email
-          <input type="text" formControlName="email" placeholder="Nhập email" />
-          @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-            <span class="error-message">Vui lòng nhập email.</span>
-          } @else if (form.controls.email.touched && form.controls.email.hasError('email')) {
-            <span class="error-message">Email không đúng định dạng.</span>
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="email">Email</nz-form-label>
+          <nz-form-control [nzErrorTip]="emailError">
+            <input
+              id="email"
+              nz-input
+              type="email"
+              formControlName="email"
+              placeholder="Nhập email"
+            />
+          </nz-form-control>
+        </nz-form-item>
+        <ng-template #emailError let-control>
+          @if (control.hasError('required')) {
+            Vui lòng nhập email.
+          } @else {
+            Email không đúng định dạng.
           }
-        </label>
+        </ng-template>
 
-        <label>
-          Avatar (URL ảnh)
-          <input type="text" formControlName="avatar" placeholder="https://..." />
-          @if (form.controls.avatar.touched && form.controls.avatar.invalid) {
-            <span class="error-message">Vui lòng nhập URL avatar.</span>
-          }
-        </label>
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="avatar">Avatar (URL ảnh)</nz-form-label>
+          <nz-form-control nzErrorTip="Vui lòng nhập URL avatar.">
+            <input
+              id="avatar"
+              nz-input
+              type="url"
+              formControlName="avatar"
+              placeholder="https://..."
+            />
+          </nz-form-control>
+        </nz-form-item>
 
         @if (form.controls.avatar.value) {
-          <img class="avatar-preview" [src]="form.controls.avatar.value" alt="avatar preview" />
+          <nz-avatar
+            class="avatar-preview"
+            [nzSize]="64"
+            [nzSrc]="form.controls.avatar.value"
+            nzAlt="Avatar xem trước"
+          ></nz-avatar>
         }
 
         @if (errorMessage()) {
-          <p class="error-message form-error">{{ errorMessage() }}</p>
+          <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
         }
 
         <div class="actions">
-          <button type="submit" class="btn-primary" [disabled]="isSaving()">
-            {{ isSaving() ? 'Đang lưu...' : 'Lưu' }}
-          </button>
-          <a routerLink="/users" class="btn-ghost">Hủy</a>
+          <button nz-button nzType="primary" type="submit" [nzLoading]="isSaving()">Lưu</button>
+          <a nz-button routerLink="/users">Hủy</a>
         </div>
       </form>
     }
-  </div>
+  </nz-card>
 </div>

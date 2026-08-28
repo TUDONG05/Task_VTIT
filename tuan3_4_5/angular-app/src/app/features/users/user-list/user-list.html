@@ -5,17 +5,34 @@
       <p class="subtitle">Quản lý thông tin người dùng trong hệ thống</p>
     </div>
     <div class="header-actions">
-      <a routerLink="/users/add" class="btn-primary">+ Thêm người dùng</a>
-      <button type="button" class="btn-ghost" (click)="logout()">Đăng xuất</button>
+      <a nz-button nzType="primary" routerLink="/users/add">+ Thêm người dùng</a>
+      <button nz-button type="button" (click)="logout()">Đăng xuất</button>
     </div>
   </header>
 
   @if (errorMessage()) {
-    <p class="banner-error">{{ errorMessage() }}</p>
+    <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
   }
 
-  <div class="table-card">
-    <table>
+  <div class="search-bar">
+    <input
+      nz-input
+      type="search"
+      [formControl]="searchControl"
+      placeholder="Tìm theo tên người dùng..."
+      aria-label="Tìm theo tên người dùng"
+    />
+  </div>
+
+  <nz-card class="table-card" [nzBodyStyle]="{ padding: '0' }">
+    <nz-table
+      #userTable
+      [nzData]="filteredUsers()"
+      [nzLoading]="isLoading()"
+      [nzFrontPagination]="false"
+      [nzShowPagination]="false"
+      [nzScroll]="{ x: '720px' }"
+    >
       <thead>
         <tr>
           <th>Avatar</th>
@@ -26,42 +43,44 @@
         </tr>
       </thead>
       <tbody>
-        @if (isLoading()) {
+        @for (user of userTable.data; track user.id) {
           <tr>
-            <td colspan="5" class="empty-state">Đang tải...</td>
+            <td><nz-avatar [nzSrc]="user.avatar" [nzAlt]="user.firstName"></nz-avatar></td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td class="actions-col">
+              <a nz-button nzType="link" [routerLink]="['/users', user.id]">Xem</a>
+              <a nz-button nzType="link" [routerLink]="['/users/edit', user.id]">Sửa</a>
+              <button
+                nz-button
+                nzType="link"
+                nzDanger
+                nz-popconfirm
+                nzPopconfirmTitle="Bạn có chắc muốn xóa người dùng này?"
+                nzOkText="Xóa"
+                nzCancelText="Hủy"
+                type="button"
+                [disabled]="deletingId() === user.id"
+                [nzLoading]="deletingId() === user.id"
+                (nzOnConfirm)="removeUser(user.id)"
+              >
+                Xóa
+              </button>
+            </td>
           </tr>
-        } @else if (users().length === 0) {
-          <tr>
-            <td colspan="5" class="empty-state">Chưa có người dùng nào.</td>
-          </tr>
-        } @else {
-          @for (user of users(); track user.id) {
-            <tr>
-              <td><img class="avatar" [src]="user.avatar" [alt]="user.firstName" /></td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.firstName }}</td>
-              <td>{{ user.lastName }}</td>
-              <td class="actions-col">
-                <a [routerLink]="['/users/edit', user.id]" class="btn-action btn-action-edit">Sửa</a>
-                <button
-                  type="button"
-                  class="btn-action btn-action-delete"
-                  [disabled]="deletingId() === user.id"
-                  (click)="removeUser(user.id)"
-                >
-                  Xóa
-                </button>
-              </td>
-            </tr>
-          }
         }
       </tbody>
-    </table>
-  </div>
+    </nz-table>
+  </nz-card>
 
   <div class="pagination">
-    <button type="button" (click)="goToPage(-1)" [disabled]="page() === 0">‹ Trước</button>
-    <span>Trang {{ page() + 1 }} / {{ totalPages() }}</span>
-    <button type="button" (click)="goToPage(1)" [disabled]="page() + 1 >= totalPages()">Sau ›</button>
+    <nz-pagination
+      [nzPageIndex]="page() + 1"
+      [nzTotal]="total()"
+      [nzPageSize]="pageSize"
+      [nzShowSizeChanger]="false"
+      (nzPageIndexChange)="goToPage($event)"
+    ></nz-pagination>
   </div>
 </div>

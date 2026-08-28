@@ -1,0 +1,39 @@
+<div class="page">
+  <a nz-button nzType="link" routerLink="/users" class="back-link">‹ Quay lại danh sách</a>
+
+  <nz-card nzTitle="Chi tiết người dùng">
+    @if (isLoading()) {
+      <div class="loading-state"><nz-spin nzTip="Đang tải..."></nz-spin></div>
+    } @else if (errorMessage()) {
+      <nz-alert nzType="error" [nzMessage]="errorMessage()" nzShowIcon></nz-alert>
+    } @else if (user(); as currentUser) {
+      <div class="profile-header">
+        <nz-avatar
+          [nzSize]="96"
+          [nzSrc]="currentUser.avatar"
+          [nzAlt]="currentUser.firstName + ' ' + currentUser.lastName"
+        ></nz-avatar>
+        <div>
+          <h1>{{ currentUser.firstName }} {{ currentUser.lastName }}</h1>
+          <p>{{ currentUser.email }}</p>
+        </div>
+      </div>
+
+      <nz-descriptions nzBordered [nzColumn]="1">
+        <nz-descriptions-item nzTitle="Mã người dùng">{{ currentUser.id }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Tên (First name)">
+          {{ currentUser.firstName }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Họ (Last name)">
+          {{ currentUser.lastName }}
+        </nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Email">{{ currentUser.email }}</nz-descriptions-item>
+      </nz-descriptions>
+
+      <div class="actions">
+        <a nz-button nzType="primary" [routerLink]="['/users/edit', currentUser.id]">Chỉnh sửa</a>
+        <a nz-button routerLink="/users">Quay lại</a>
+      </div>
+    }
+  </nz-card>
+</div>
