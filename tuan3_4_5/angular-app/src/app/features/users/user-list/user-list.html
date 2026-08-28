@@ -50,6 +50,7 @@
             <td>{{ user.firstName }}</td>
             <td>{{ user.lastName }}</td>
             <td class="actions-col">
+              <a nz-button nzType="link" [routerLink]="['/users', user.id]">Xem</a>
               <a nz-button nzType="link" [routerLink]="['/users/edit', user.id]">Sửa</a>
               <button
                 nz-button

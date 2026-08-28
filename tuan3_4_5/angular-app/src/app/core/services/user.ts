@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, map, of, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
 import { User, UserFormValue } from '../models/user';
 import { environment } from '../../../environments/environment';
 
@@ -78,11 +78,23 @@ export class UserService {
 
   /** tim user localstorage truoc -> api  */
   fetchOne(id: number): Observable<User | undefined> {
-    const cached = this.getById(id);
+    if (this.localDeletes.has(id)) {
+      return of(undefined);
+    }
+
+    const cached =
+      this.localUpdates.get(id) ??
+      this.localCreated().find((user) => user.id === id) ??
+      this.getById(id);
     if (cached || id < 0) {
       return of(cached);
     }
-    return this.http.get<{ data: ReqresUser }>(`${API_URL}/${id}`).pipe(map((res) => toUser(res.data)));
+    return this.http.get<{ data: ReqresUser }>(`${API_URL}/${id}`).pipe(
+      map((res) => toUser(res.data)),
+      catchError((error: HttpErrorResponse) =>
+        error.status === 404 ? of(undefined) : throwError(() => error),
+      ),
+    );
   }
 
   create(value: UserFormValue): Observable<User> {
