@@ -2,5 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/angular-app/browser",
   "framework": null,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/avatars/:path*",
+      "destination": "https://reqres.in/img/faces/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
